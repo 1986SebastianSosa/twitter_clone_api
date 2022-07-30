@@ -9,8 +9,12 @@
   "author": "Sebastian Sosa",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "sequelize": "^6.21.3"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.4.7",
+    "mysql2": "^2.3.3"
   }
 }
