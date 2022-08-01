@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const isLoggedIn = require("../auth");
+const verifyJWT = require("../middlewares/verifyJWT");
 
 router.get("/free", (req, res) => {
   res.send("free for all");
 });
 
-router.get("/private", isLoggedIn, (req, res) => {
+router.get("/private", verifyJWT, (req, res) => {
   res.send("just for registered users");
 });
 

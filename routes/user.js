@@ -1,9 +1,10 @@
 const express = require("express");
-const passport = require("passport");
 const router = express.Router();
+
 const {
   register,
   login,
+  refreshToken,
   show,
   update,
   destroy,
@@ -12,6 +13,8 @@ const {
 router.post("/register", register);
 
 router.post("/login", login);
+
+router.get("/refresh", refreshToken);
 
 router.get("/:id", show);
 

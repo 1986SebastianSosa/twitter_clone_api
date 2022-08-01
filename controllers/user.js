@@ -4,6 +4,23 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   const { firstname, lastname, username, password, email } = req.body;
+  if (!username || !lastname || !username || !password || !email) {
+    return res
+      .status(400)
+      .json({ msj: "Some register information is missing" });
+  }
+  //check for duplicate user
+  const duplicateUsername = await User.findOne({ username });
+  if (duplicateUsername) {
+    return res.status(409).json({ msj: "That username is already taken" });
+  }
+  const duplicateEmail = await User.findOne({ email });
+  if (duplicateEmail) {
+    return res
+      .status(409)
+      .json({ msj: "There's already an account with that email address" });
+  }
+
   const hashedPassword = await User.hashPassword(password);
   try {
     const user = await User.create({
@@ -13,32 +30,96 @@ const register = async (req, res) => {
       password: hashedPassword,
       email,
     });
+    const accessToken = jwt.sign({ username }, process.env.JWT_ACCESS_SECRET, {
+      expiresIn: "60s",
+    });
+    const refreshToken = jwt.sign(
+      { username },
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: "24h" }
+    );
     let response = {
       ...user._doc,
-      accessToken: makeToken(user._id, user.username),
+      accessToken,
     };
-    res.status(201).json(response);
+    user.refreshToken = refreshToken;
+    user.save();
+
+    res
+      .status(201)
+      .cookie("jwt", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .json(response);
   } catch (err) {
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
 };
 
 const login = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(409).json({ msj: "Some login information is missing" });
+  }
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ msg: "Credentials are not correct" });
+    }
     const verifyPassword = await bcrypt.compare(
       req.body.password,
       user.password
     );
     if (!verifyPassword) {
-      return res.status(400).json({ msg: "Credentials are not correct" });
+      return res.status(401).json({ msg: "Credentials are not correct" });
     }
-    const token = await makeToken(user._id, user.username);
-    let response = { token, ...user._doc };
-    res.status(200).json(response);
+
+    const accessToken = jwt.sign(
+      { username: user.username },
+      process.env.JWT_ACCESS_SECRET,
+      {
+        expiresIn: "30s",
+      }
+    );
+
+    const refreshToken = jwt.sign(
+      { username: user.username },
+      process.env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: "24h",
+      }
+    );
+
+    user.refreshToken = refreshToken;
+    const result = await user.save();
+
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ accessToken, msj: "logged in" });
   } catch (err) {
     res.status(404).json({ msg: "Credentials are not correct", err });
   }
+};
+
+const refreshToken = async (req, res) => {
+  const cookies = req.cookies;
+  if (!cookies?.jwt) return res.sendStatus(401);
+
+  const user = await User.findOne({ refreshToken: cookies.jwt });
+
+  if (!user) return res.sendStatus(403);
+  jwt.verify(cookies.jwt, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
+    if (err || user.username !== decoded.username) return res.sendStatus(403);
+    const accessToken = jwt.sign(
+      { username: decoded.username },
+      process.env.JWT_ACCESS_SECRET,
+      { expiresIn: "30s" }
+    );
+    res.json({ accessToken });
+  });
 };
 
 const show = async (req, res) => {
@@ -84,9 +165,13 @@ const destroy = async (req, res) => {
   }
 };
 
-const makeToken = (id, username) => {
-  const secret = process.env.JWT_SECRET;
-  return jwt.sign({ id: id, username: username }, secret, { expiresIn: "24h" });
-};
+// const makeAccessToken = (username) => {
+//   const secret = process.env.JWT_ACCESS_SECRET;
+//   return jwt.sign({ username: username }, secret, { expiresIn: "60s" });
+// };
+// const makeRefreshToken = (username) => {
+//   const secret = process.env.JWT_REFRESH_SECRET;
+//   return jwt.sign({ username: username }, secret, { expiresIn: "24h" });
+// };
 
-module.exports = { register, login, show, update, destroy };
+module.exports = { register, login, refreshToken, show, update, destroy };

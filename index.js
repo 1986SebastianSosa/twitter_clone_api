@@ -10,11 +10,13 @@ const tweetLikeRoutes = require("./routes/tweetLike");
 const commentLikeRoutes = require("./routes/commentLike");
 const authTestRoutes = require("./routes/authTest");
 const dbInitialSetup = require("./dbInitialSetup");
+const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(cookieParser());
 
 app.use("/user", userRoutes);
 app.use("/tweet", tweetRoutes);
