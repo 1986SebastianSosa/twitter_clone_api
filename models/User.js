@@ -8,6 +8,10 @@ const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  createdOn: { type: Date, default: Date.now },
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   refreshToken: { type: String },
 });
 
