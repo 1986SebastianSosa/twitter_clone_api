@@ -1,12 +1,27 @@
 const Tweet = require("../models/Tweet");
 
 const post = async (req, res) => {
-  const { content } = req.body;
+  const { content, author, createdOn } = req.body;
   try {
     const tweet = await Tweet.create({
       content,
+      author,
+      createdOn,
     });
+
     res.status(200).json(tweet);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
+const showAll = async (req, res) => {
+  try {
+    const allTweets = await Tweet.find()
+      .populate("author")
+      .sort({ createdOn: -1 });
+    console.log(allTweets);
+    res.status(200).json(allTweets);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -54,4 +69,4 @@ const destroy = async (req, res) => {
   }
 };
 
-module.exports = { post, show, update, destroy };
+module.exports = { post, showAll, show, update, destroy };

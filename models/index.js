@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const dbInitialSetup = require("./seeders/dbInitialSetup");
 
 mongoose
-  .connect("mongodb://localhost:27017/twitter_clone", {
+  .connect("mongodb://127.0.0.1/twitter_clone", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -9,3 +10,5 @@ mongoose
   .catch((err) => {
     console.log("There was an error: ", err);
   });
+
+dbInitialSetup();

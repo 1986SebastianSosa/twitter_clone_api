@@ -98,7 +98,7 @@ const login = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ accessToken, msj: "logged in" });
+    res.status(200).json({ user, accessToken, msj: "logged in" });
   } catch (err) {
     res.status(404).json({ msg: "Credentials are not correct", err });
   }
@@ -129,6 +129,15 @@ const show = async (req, res) => {
     res.status(200).json(user);
   } catch (err) {
     res.status(400).json({ msg: "Credentials are not correct", err });
+  }
+};
+
+const showAll = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(400).json({ msg: "Something went wrong. Try again", err });
   }
 };
 
@@ -174,4 +183,12 @@ const destroy = async (req, res) => {
 //   return jwt.sign({ username: username }, secret, { expiresIn: "24h" });
 // };
 
-module.exports = { register, login, refreshToken, show, update, destroy };
+module.exports = {
+  register,
+  login,
+  refreshToken,
+  show,
+  showAll,
+  update,
+  destroy,
+};
