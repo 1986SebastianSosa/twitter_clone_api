@@ -23,10 +23,9 @@ const userSeeder = async () => {
       following: null,
       followers: null,
     });
-    user.save(() => {
-      console.log("Users have been created successfully");
-    });
+    user.save();
   }
+  console.log("Users have been created successfully");
 };
 
 module.exports = userSeeder;
