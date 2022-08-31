@@ -16,7 +16,10 @@ const tweetSeeder = async () => {
         content: faker.lorem.paragraph(1),
         comments: null,
         likes: likesGenerator(),
-        createdOn: new Date(),
+        createdOn: faker.date.between(
+          "2010-01-01T00:00:00.000Z",
+          "2022-01-01T00:00:00.000Z"
+        ),
       });
 
       if (!userToUpdate.tweets) {

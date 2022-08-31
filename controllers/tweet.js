@@ -1,4 +1,5 @@
 const Tweet = require("../models/Tweet");
+const User = require("../models/User");
 
 const post = async (req, res) => {
   const { content, author, createdOn } = req.body;
@@ -16,12 +17,22 @@ const post = async (req, res) => {
 };
 
 const showAll = async (req, res) => {
+  const tweetsToShow = [];
   try {
-    const allTweets = await Tweet.find()
-      .populate("author")
-      .sort({ createdOn: -1 });
-    console.log(allTweets);
-    res.status(200).json(allTweets);
+    const user = await User.findById(req.headers.userid).populate({
+      path: "following",
+      populate: {
+        path: "tweets",
+        populate: { path: "comments", populate: "author" },
+        populate: { path: "author" },
+      },
+    });
+    for (let following of user.following) {
+      for (let tweet of following.tweets) {
+        tweetsToShow.push(tweet);
+      }
+    }
+    res.status(200).json(tweetsToShow);
   } catch (err) {
     res.status(400).json(err);
   }
