@@ -4,6 +4,7 @@ const User = require("../User");
 const password = process.env.FAKE_USERS_PASSWORD;
 
 const userSeeder = async () => {
+  console.log("Creating users...");
   let hash = await bcrypt.hash(password, 10);
   let testPass = await bcrypt.hash("12345", 10);
   const testUser = new User({
@@ -14,7 +15,9 @@ const userSeeder = async () => {
     email: "seba@gmail.com",
     createdOn: new Date(),
     tweets: null,
+    tweetLikes: null,
     comments: null,
+    commentLikes: null,
     following: null,
     followers: null,
   });
@@ -33,7 +36,9 @@ const userSeeder = async () => {
       email,
       createdOn: new Date(),
       tweets: null,
+      tweetLikes: null,
       comments: null,
+      commentLikes: null,
       following: null,
       followers: null,
     });

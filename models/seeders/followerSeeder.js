@@ -1,6 +1,7 @@
 const User = require("../User");
 
 const followerSeeder = async () => {
+  console.log("Creating followers...");
   const users = await User.find();
 
   for (let user of users) {

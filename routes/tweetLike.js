@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const { postLike, getLikes } = require("../controllers/tweetLikes");
 
-router.post("/:id", (req, res) => {
-  res.send(`Post a Like on Tweet with id=${req.params.id}`);
-});
+router.get("/:id", getLikes);
+router.post("/:id", postLike);
 
 router.delete("/:id", (req, res) => {
   res.send(`Eliminate a Like on Tweet with id=${req.params.id}`);

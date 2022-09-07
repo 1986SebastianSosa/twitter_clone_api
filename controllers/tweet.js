@@ -9,10 +9,10 @@ const post = async (req, res) => {
       author,
       createdOn,
     });
-    console.log(tweet);
+
     const user = await User.findById(author);
     user.tweets = [...user.tweets, tweet];
-    console.log("user: ", user.tweets);
+
     user.save();
     res.status(200).json(tweet);
   } catch (err) {
@@ -37,7 +37,6 @@ const showAll = async (req, res) => {
 
     for (let following of user.following) {
       for (let tweet of following.tweets) {
-        console.log("tweet.comments: ", tweet.comments);
         tweetsToShow.push(tweet);
       }
     }
@@ -58,7 +57,11 @@ const showAll = async (req, res) => {
 const show = async (req, res) => {
   const id = req.params.id;
   try {
-    const tweet = await Tweet.findByPk(id);
+    console.log("trying");
+    const tweet = await Tweet.findById(id)
+      .populate({ path: "comments", populate: "author" })
+      .populate("likes")
+      .populate("author");
     res.status(200).json(tweet);
   } catch (err) {
     res.status(400).json(err);
@@ -88,10 +91,19 @@ const update = async (req, res) => {
 const destroy = async (req, res) => {
   const id = req.params.id;
   try {
-    const tweet = await Tweet.destroy({
-      where: { id: id },
+    const tweet = await Tweet.deleteOne({
+      _id: id,
     });
-    res.status(200).json({ msj: "The specified tweet has been deleted" });
+    console.log("tweet: ", tweet);
+    if (tweet.deletedCount === 0) {
+      res
+        .status(404)
+        .json({ msj: "The Tweet you intended to delete was not found" });
+    } else {
+      res
+        .status(200)
+        .json({ msj: `The Tweet with id: ${id} has been deleted` });
+    }
   } catch (err) {
     res.status(400).json(err);
   }

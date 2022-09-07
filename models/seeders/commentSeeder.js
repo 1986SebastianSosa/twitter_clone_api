@@ -4,9 +4,9 @@ const Comment = require("../Comment");
 const { faker } = require("@faker-js/faker");
 
 const commentSeeder = async () => {
+  console.log("Creating comments...");
   const tweets = await Tweet.find();
   const users = await User.find();
-  console.log("Creating comments...");
 
   for (let tweet of tweets) {
     let commentAmount = Math.floor(Math.random() * 15 + 1);
@@ -20,9 +20,22 @@ const commentSeeder = async () => {
         author: updatedRandomUser.id,
         tweet: tweet.id,
         content: faker.lorem.lines(),
-        likes: likesGenerator(),
+        likes: null,
         createdOn: new Date(),
       });
+
+      comment.likes = await likesGenerator();
+      for (let user of comment.likes) {
+        const userThatLikedComment = await User.findById(user);
+        userThatLikedComment.commentLikes
+          ? (userThatLikedComment.commentLikes = [
+              ...userThatLikedComment.commentLikes,
+              comment.id,
+            ])
+          : (userThatLikedComment.commentLikes = [comment.id]);
+        userThatLikedComment.save();
+      }
+      comment.save();
 
       if (!updatedRandomUser.comments) {
         await updatedRandomUser.updateOne({ comments: [comment.id] });
@@ -42,7 +55,7 @@ const commentSeeder = async () => {
   }
   console.log("Comments have been created successfully");
 
-  function likesGenerator() {
+  async function likesGenerator() {
     let likesAmount = Math.floor(Math.random() * 50 + 1);
     const likesArray = [];
 

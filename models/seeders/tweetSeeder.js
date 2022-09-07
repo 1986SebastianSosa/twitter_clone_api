@@ -3,6 +3,7 @@ const Tweet = require("../Tweet");
 const { faker } = require("@faker-js/faker");
 
 const tweetSeeder = async () => {
+  console.log("Creating tweets...");
   const users = await User.find();
 
   for (let user of users) {
@@ -15,13 +16,25 @@ const tweetSeeder = async () => {
         author: userToUpdate.id,
         content: faker.lorem.paragraph(1),
         comments: null,
-        likes: likesGenerator(),
+        likes: null,
         createdOn: faker.date.between(
           "2010-01-01T00:00:00.000Z",
           "2022-01-01T00:00:00.000Z"
         ),
       });
 
+      tweet.likes = await likesGenerator();
+      for (let user of tweet.likes) {
+        const userThatLikedTweet = await User.findById(user);
+        userThatLikedTweet.tweetLikes
+          ? (userThatLikedTweet.tweetLikes = [
+              ...userThatLikedTweet.tweetLikes,
+              tweet.id,
+            ])
+          : (userThatLikedTweet.tweetLikes = [tweet.id]);
+        userThatLikedTweet.save();
+      }
+      tweet.save();
       if (!userToUpdate.tweets) {
         await userToUpdate.updateOne({ tweets: [tweet.id] });
       } else {
@@ -31,9 +44,8 @@ const tweetSeeder = async () => {
       }
     }
   }
-  console.log("Tweets have been created successfully");
 
-  function likesGenerator() {
+  async function likesGenerator() {
     let likesAmount = Math.floor(Math.random() * 50 + 1);
     const likesArray = [];
 
@@ -45,6 +57,7 @@ const tweetSeeder = async () => {
     }
     return likesArray;
   }
+  console.log("Tweets have been created successfully");
 };
 
 module.exports = tweetSeeder;

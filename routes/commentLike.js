@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const { getLikes, postLike } = require("../controllers/commentLikes");
 
-router.post("/:id", (req, res) => {
-  res.send(`Post a Like on comment with id=${req.params.id}`);
-});
+router.get("/:id", getLikes);
+
+router.post("/:id", postLike);
 
 router.delete("/:id", (req, res) => {
   res.send(`Eliminate a Like on comment with id=${req.params.id}`);
