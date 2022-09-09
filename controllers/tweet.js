@@ -36,9 +36,10 @@ const showAll = async (req, res) => {
     });
 
     for (let following of user.following) {
-      for (let tweet of following.tweets) {
-        tweetsToShow.push(tweet);
-      }
+      // for (let tweet of following.tweets) {
+      //   tweetsToShow.push(tweet);
+      // }
+      tweetsToShow.push(following.tweets[0]);
     }
 
     const userTweets = await Tweet.find({ author: user.id })
@@ -57,7 +58,6 @@ const showAll = async (req, res) => {
 const show = async (req, res) => {
   const id = req.params.id;
   try {
-    console.log("trying");
     const tweet = await Tweet.findById(id)
       .populate({ path: "comments", populate: "author" })
       .populate("likes")
