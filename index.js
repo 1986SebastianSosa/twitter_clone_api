@@ -9,7 +9,7 @@ const tweetRoutes = require("./routes/tweet");
 const commentRoutes = require("./routes/comment");
 const tweetLikeRoutes = require("./routes/tweetLike");
 const commentLikeRoutes = require("./routes/commentLike");
-const authTestRoutes = require("./routes/authTest");
+const authRoutes = require("./routes/auth");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const dbConnect = require("./models");
@@ -25,6 +25,6 @@ app.use("/tweet", tweetRoutes);
 app.use("/comment", commentRoutes);
 app.use("/tweetLike", tweetLikeRoutes);
 app.use("/commentLike", commentLikeRoutes);
-app.use("/auth", authTestRoutes);
+app.use("/auth", authRoutes);
 
 app.listen(PORT, () => console.log(`Serving on port ${PORT}`));

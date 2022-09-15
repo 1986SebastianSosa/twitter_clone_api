@@ -4,6 +4,14 @@ const User = require("../models/User");
 const post = async (req, res) => {
   const { content, author, createdOn } = req.body;
   try {
+    if (!content) {
+      return res.status(418).json({ msj: "There was no content to post" });
+    }
+    if (!author) {
+      return res
+        .status(401)
+        .json({ msj: "You need to be logged in to post a Tweet" });
+    }
     const tweet = await Tweet.create({
       content,
       author,
@@ -36,10 +44,12 @@ const showAll = async (req, res) => {
     });
 
     for (let following of user.following) {
-      // for (let tweet of following.tweets) {
-      //   tweetsToShow.push(tweet);
-      // }
-      tweetsToShow.push(following.tweets[0]);
+      for (let tweet of following.tweets) {
+        if (tweet) {
+          tweetsToShow.push(tweet);
+        }
+      }
+      // tweetsToShow.push(following.tweets[0]);
     }
 
     const userTweets = await Tweet.find({ author: user.id })

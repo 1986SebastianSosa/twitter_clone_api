@@ -1,20 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {
-  register,
-  login,
-  refreshToken,
-  show,
-  update,
-  destroy,
-} = require("../controllers/user");
-
-router.post("/register", register);
-
-router.post("/login", login);
-
-router.get("/refresh", refreshToken);
+const { show, update, destroy } = require("../controllers/user");
 
 router.get("/:id", show);
 
