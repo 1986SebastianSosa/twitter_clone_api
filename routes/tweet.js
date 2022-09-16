@@ -6,7 +6,10 @@ const {
   destroy,
   showAll,
 } = require("../controllers/tweet");
+const verifyJWT = require("../middlewares/verifyJWT");
 const router = express.Router();
+
+router.use(verifyJWT);
 
 router.post("/", post);
 

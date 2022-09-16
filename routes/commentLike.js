@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { getLikes, postLike } = require("../controllers/commentLikes");
+const verifyJWT = require("../middlewares/verifyJWT");
+
+router.use(verifyJWT);
 
 router.get("/:id", getLikes);
 

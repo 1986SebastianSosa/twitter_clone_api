@@ -6,7 +6,6 @@ const {
   refreshToken,
 } = require("../controllers/auth");
 const router = express.Router();
-const verifyJWT = require("../middlewares/verifyJWT");
 
 router.post("/register", register);
 

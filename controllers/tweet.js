@@ -1,8 +1,13 @@
 const Tweet = require("../models/Tweet");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+require("dotenv").config;
 
 const post = async (req, res) => {
-  const { content, author, createdOn } = req.body;
+  const { content, createdOn } = req.body;
+  const token = req.headers.authorization;
+  const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+  const author = decoded.id;
   try {
     if (!content) {
       return res.status(418).json({ msj: "There was no content to post" });
@@ -36,9 +41,9 @@ const showAll = async (req, res) => {
       populate: {
         path: "tweets",
         populate: [
-          { path: "comments", populate: ["author", "likes"] },
+          //   { path: "comments", populate: ["author", "likes"] },
           "author",
-          "likes",
+          //   "likes",
         ],
       },
     });
@@ -49,14 +54,6 @@ const showAll = async (req, res) => {
           tweetsToShow.push(tweet);
         }
       }
-      // tweetsToShow.push(following.tweets[0]);
-    }
-
-    const userTweets = await Tweet.find({ author: user.id })
-      .populate("author")
-      .populate({ path: "comments", populate: "author" });
-    for (let tweet of userTweets) {
-      tweetsToShow.push(tweet);
     }
 
     res.status(200).json(tweetsToShow);
@@ -104,7 +101,6 @@ const destroy = async (req, res) => {
     const tweet = await Tweet.deleteOne({
       _id: id,
     });
-    console.log("tweet: ", tweet);
     if (tweet.deletedCount === 0) {
       res
         .status(404)

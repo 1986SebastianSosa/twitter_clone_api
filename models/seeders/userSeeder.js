@@ -7,7 +7,7 @@ const userSeeder = async () => {
   console.log("Creating users...");
   let hash = await bcrypt.hash(password, 10);
   let testPass = await bcrypt.hash("12345", 10);
-  const testUser = new User({
+  const testUser = await new User({
     firstname: "Sebastian",
     lastname: "Sosa",
     username: "Timetoarrive",
@@ -21,6 +21,7 @@ const userSeeder = async () => {
     following: null,
     followers: null,
   });
+  testUser.following = testUser._id;
   await testUser.save();
   for (let i = 0; i < 50; i++) {
     const firstname = faker.name.firstName();
@@ -42,6 +43,7 @@ const userSeeder = async () => {
       following: null,
       followers: null,
     });
+    user.following = user._id;
     await user.save();
   }
   console.log("Users have been created successfully");

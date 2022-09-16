@@ -24,7 +24,6 @@ const showAll = async (req, res) => {
 const update = async (req, res) => {
   const id = req.params.id;
   const { username, password, email } = req.body;
-  console.log(username, password, email);
   try {
     const updateUser = await User.update(
       { username: username, password: password, email: email },

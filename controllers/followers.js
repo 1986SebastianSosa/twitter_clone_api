@@ -1,9 +1,7 @@
 const User = require("../models/User");
 
 const showAll = async (req, res) => {
-  const loggedUser = await User.findById(req.headers.userid).populate(
-    "following"
-  );
+  const loggedUser = await User.findById(req.params.id).populate("following");
   const users = await User.find();
   const followSuggestions = [];
   try {
@@ -53,7 +51,6 @@ const unfollowUser = async (req, res) => {
         return;
       }
     });
-    // console.log(updatedLoggedUserFollowing);
     const updatedUserToUnfollowFollowers = userToUnfollow.followers.map(
       (el) => {
         if (el.id && el.id !== loggedUser.id) {
