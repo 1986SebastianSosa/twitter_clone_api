@@ -133,7 +133,8 @@ const refreshToken = async (req, res) => {
         process.env.JWT_ACCESS_SECRET,
         { expiresIn: "1h" }
       );
-      res.json
+      res
+        .status(200)
         .header("Access-Control-Allow-Origin", "true")
         .json({ accessToken });
     }
