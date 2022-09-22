@@ -77,12 +77,9 @@ const login = async (req, res) => {
     }
     const verifyPassword = await User.comparePassword(password, user.password);
     if (!verifyPassword) {
-      return res
-        .status(401)
-        .json({
-          msg: "Credentials are not correct",
-          headers: { "Access-Control-Allow-Origin": "*" },
-        });
+      return res.status(401).json({
+        msg: "Credentials are not correct",
+      });
     }
 
     const accessToken = jwt.sign(
