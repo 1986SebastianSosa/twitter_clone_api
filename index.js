@@ -27,12 +27,12 @@ app.use(
 app.use(cookieParser());
 app.options("*", cors());
 
-app.use("/user", userRoutes);
-app.use("/followers", followRoutes);
-app.use("/tweet", tweetRoutes);
-app.use("/comment", commentRoutes);
-app.use("/tweetLike", tweetLikeRoutes);
-app.use("/commentLike", commentLikeRoutes);
-app.use("/auth", authRoutes);
+app.use("user", userRoutes);
+app.use("followers", followRoutes);
+app.use("tweet", tweetRoutes);
+app.use("comment", commentRoutes);
+app.use("tweetLike", tweetLikeRoutes);
+app.use("commentLike", commentLikeRoutes);
+app.use("auth", authRoutes);
 
 app.listen(PORT, () => console.log(`Serving on port ${PORT}`));
