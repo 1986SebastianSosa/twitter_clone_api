@@ -75,6 +75,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({ msg: "Credentials are not correct" });
     }
+    res.send("found user");
     const verifyPassword = await User.comparePassword(password, user.password);
     if (!verifyPassword) {
       return res.status(401).json({ msg: "Credentials are not correct" });
