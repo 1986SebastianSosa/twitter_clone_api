@@ -16,14 +16,7 @@ const dbConnect = require("./models");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-    allowedHeaders: ["authorization"],
-    methods: ["GET", "PUT", "POST"],
-  })
-);
+app.use(cors({ origin: "*", credentials: true }));
 app.use(cookieParser());
 app.options("*", cors());
 
