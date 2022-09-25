@@ -11,6 +11,7 @@ const tweetLikeRoutes = require("./routes/tweetLike");
 const commentLikeRoutes = require("./routes/commentLike");
 const authRoutes = require("./routes/auth");
 const cookieParser = require("cookie-parser");
+const myMod = require("./models");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
