@@ -79,7 +79,7 @@ const login = async (req, res) => {
     if (!verifyPassword) {
       return res
         .status(401)
-
+        .header("Access-Control-Allow-Origin", "true")
         .json({
           msg: "Credentials are not correct",
         });
@@ -133,9 +133,7 @@ const refreshToken = async (req, res) => {
         process.env.JWT_ACCESS_SECRET,
         { expiresIn: "1h" }
       );
-      res.json
-        .header("Access-Control-Allow-Origin", "true")
-        .json({ accessToken });
+      res.json({ accessToken });
     }
   );
 };
