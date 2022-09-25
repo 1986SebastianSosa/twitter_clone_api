@@ -3,7 +3,7 @@ const dbInitialSetup = require("./seeders/dbInitialSetup");
 
 const mongooseConnection = async () => {
   await mongoose
-    .connect(process.env.DB_URI, {
+    .connect("mongodb://127.0.0.1/twitter_clone", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
