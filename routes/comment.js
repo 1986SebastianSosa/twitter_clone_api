@@ -3,7 +3,7 @@ const { post, show, update, destroy } = require("../controllers/comment");
 const router = express.Router();
 const verifyJWT = require("../middlewares/verifyJWT");
 
-router.use(verifyJWT);
+// router.use(verifyJWT);
 
 router.post("/:id", post);
 

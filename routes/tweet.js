@@ -9,7 +9,7 @@ const {
 const verifyJWT = require("../middlewares/verifyJWT");
 const router = express.Router();
 
-router.use(verifyJWT);
+// router.use(verifyJWT);
 
 router.post("/", post);
 
