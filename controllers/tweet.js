@@ -27,6 +27,7 @@ const post = async (req, res) => {
     user.tweets = [...user.tweets, tweet];
 
     user.save();
+    console.log("tweet created");
     res.status(200).json(tweet);
   } catch (err) {
     res.status(400).json(err);

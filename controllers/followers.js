@@ -13,7 +13,7 @@ const showAll = async (req, res) => {
         followSuggestions.push(user);
       }
     }
-    res.status(200).send(followSuggestions);
+    res.status(200).json(followSuggestions);
   } catch (err) {
     res.status(404).json({ msg: "No user suggestions to follow were found" });
   }

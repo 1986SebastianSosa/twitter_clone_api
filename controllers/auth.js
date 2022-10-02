@@ -48,8 +48,6 @@ const register = async (req, res) => {
       ...user._doc,
       accessToken,
     };
-    user.refreshToken = refreshToken;
-    user.save();
 
     res
       .status(201)
@@ -106,7 +104,7 @@ const login = async (req, res) => {
       sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ user });
+    res.status(200).json({ user, token: accessToken });
   } catch (err) {
     res.status(404).json({ msg: "Credentials are not correct", err });
     throw new Error(err);
