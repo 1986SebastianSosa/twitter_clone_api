@@ -6,10 +6,7 @@ const showAll = async (req, res) => {
   const followSuggestions = [];
   try {
     for (let user of users) {
-      if (
-        user.id !== loggedUser.id &&
-        !loggedUser.following.find((el) => el.id === user.id)
-      ) {
+      if (user.id !== loggedUser.id) {
         followSuggestions.push(user);
       }
     }
