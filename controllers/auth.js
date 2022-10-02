@@ -44,12 +44,12 @@ const register = async (req, res) => {
       process.env.JWT_REFRESH_SECRET,
       { expiresIn: "24h" }
     );
-    // let response = {
-    //   ...user._doc,
-    //   accessToken,
-    // };
-    // user.refreshToken = refreshToken;
-    // user.save();
+    let response = {
+      ...user._doc,
+      accessToken,
+    };
+    user.refreshToken = refreshToken;
+    user.save();
 
     res
       .status(201)
@@ -73,11 +73,15 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ msg: "Credentials are not correct" });
+      return res
+        .status(401)
+        .json({ msg: "Credentials are not correct, no user" });
     }
     const verifyPassword = await User.comparePassword(password, user.password);
     if (!verifyPassword) {
-      return res.status(401).json({ msg: "Credentials are not correct" });
+      return res
+        .status(401)
+        .json({ msg: "Credentials are not correct, no password" });
     }
 
     const accessToken = jwt.sign(
@@ -102,7 +106,7 @@ const login = async (req, res) => {
       sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ user, token: accessToken });
+    res.status(200).json({ user });
   } catch (err) {
     res.status(404).json({ msg: "Credentials are not correct", err });
     throw new Error(err);

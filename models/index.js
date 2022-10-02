@@ -3,7 +3,7 @@ const dbInitialSetup = require("./seeders/dbInitialSetup");
 
 const mongooseConnection = async () => {
   try {
-    await mongoose.connect(process.env.DB_URI, {
+    mongoose.connect(process.env.DB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

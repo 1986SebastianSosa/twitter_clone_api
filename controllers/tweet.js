@@ -34,6 +34,8 @@ const post = async (req, res) => {
 };
 
 const showAll = async (req, res) => {
+  const page = req.query.page;
+  const allTweets = [];
   const tweetsToShow = [];
   try {
     const user = await User.findById(req.headers.userid).populate({
@@ -51,12 +53,25 @@ const showAll = async (req, res) => {
     for (let following of user.following) {
       for (let tweet of following.tweets) {
         if (tweet) {
-          tweetsToShow.push(tweet);
+          allTweets.push(tweet);
         }
       }
     }
 
-    res.status(200).json(tweetsToShow);
+    const sortedTweets = allTweets.sort(
+      (a, b) => Date.parse(b.createdOn) - Date.parse(a.createdOn)
+    );
+
+    let firstIndex = (page - 1) * 10;
+    let lastIndex = firstIndex + 10;
+
+    for (let i = firstIndex; i < lastIndex; i++) {
+      if (allTweets[i]) {
+        tweetsToShow.push(sortedTweets[i]);
+      }
+    }
+
+    res.status(200).json({ tweetsToShow, allTweetsLength: allTweets.length });
   } catch (err) {
     res.status(400).json(err);
   }
