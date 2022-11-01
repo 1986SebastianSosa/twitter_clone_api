@@ -71,15 +71,11 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res
-        .status(401)
-        .json({ msg: "Credentials are not correct, no user" });
+      return res.status(401).json({ msg: "Credentials are not correct" });
     }
     const verifyPassword = await User.comparePassword(password, user.password);
     if (!verifyPassword) {
-      return res
-        .status(401)
-        .json({ msg: "Credentials are not correct, no password" });
+      return res.status(401).json({ msg: "Credentials are not correct" });
     }
 
     const accessToken = jwt.sign(
