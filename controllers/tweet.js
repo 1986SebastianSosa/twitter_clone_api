@@ -35,9 +35,7 @@ const post = async (req, res) => {
 };
 
 const showAll = async (req, res) => {
-  console.log("req.params: ", req.params);
   const page = req.params.page;
-  console.log("page: ", page);
   const allTweets = [];
   const tweetsToShow = [];
   try {

@@ -39,11 +39,9 @@ const register = async (req, res) => {
         expiresIn: "1d",
       }
     );
-    const refreshToken = jwt.sign(
-      { username },
-      process.env.JWT_REFRESH_SECRET,
-      { expiresIn: "24h" }
-    );
+    const refreshToken = jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
+      expiresIn: "24h",
+    });
     let response = {
       ...user._doc,
       accessToken,
@@ -87,7 +85,7 @@ const login = async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      { username: user.username },
+      { id: user.id },
       process.env.JWT_REFRESH_SECRET,
       {
         expiresIn: "24h",
@@ -110,17 +108,18 @@ const login = async (req, res) => {
 const refreshToken = async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.status(401).json({ msg: "Unauthorized" });
-
   jwt.verify(
     cookies.jwt,
     process.env.JWT_REFRESH_SECRET,
     async (err, decoded) => {
       const id = decoded.id;
-      console.log("decoded: ", decoded);
-      const user = await User.findById({ id });
+      console.log("id: ", id);
+      const user = await User.findById(id);
+      console.log("user.id: ", user.id);
       if (!user) return res.sendStatus(403);
-      if (err || user._id !== decoded.id) return res.sendStatus(403);
+      if (err || user.id !== id) return res.sendStatus(403);
 
+      console.log("preparing access Token");
       const accessToken = jwt.sign(
         { username: decoded.username },
         process.env.JWT_ACCESS_SECRET,
