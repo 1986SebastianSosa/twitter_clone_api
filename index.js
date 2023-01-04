@@ -1,8 +1,12 @@
-const express = require("express");
 require("dotenv").config();
+const express = require("express");
 const app = express();
 const PORT = process.env.API_PORT;
 const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
+const cookieParser = require("cookie-parser");
+const credentials = require("./middlewares/credentials");
+
 const userRoutes = require("./routes/user");
 const followRoutes = require("./routes/followers");
 const tweetRoutes = require("./routes/tweet");
@@ -10,12 +14,13 @@ const commentRoutes = require("./routes/comment");
 const tweetLikeRoutes = require("./routes/tweetLike");
 const commentLikeRoutes = require("./routes/commentLike");
 const authRoutes = require("./routes/auth");
-const cookieParser = require("cookie-parser");
+
 const myMod = require("./models");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(credentials);
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use("/user", userRoutes);
