@@ -47,7 +47,7 @@ const destroy = async (req, res) => {
     const user = await User.destroy({
       where: { id: id },
     });
-    res.status(200).json({ msj: "The specified user has been deleted" });
+    res.status(200).json({ msg: "The specified user has been deleted" });
   } catch (err) {
     res.status(400).json(err);
   }

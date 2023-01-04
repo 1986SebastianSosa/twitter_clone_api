@@ -7,18 +7,18 @@ const register = async (req, res) => {
   if (!firstname || !lastname || !username || !password || !email) {
     return res
       .status(400)
-      .json({ msj: "Some register information is missing" });
+      .json({ msg: "Some register information is missing" });
   }
   //check for duplicate user
   const duplicateUsername = await User.findOne({ username });
   if (duplicateUsername) {
-    return res.status(409).json({ msj: "That username is already taken" });
+    return res.status(409).json({ msg: "That username is already taken" });
   }
   const duplicateEmail = await User.findOne({ email });
   if (duplicateEmail) {
     return res
       .status(409)
-      .json({ msj: "There's already an account with that email address" });
+      .json({ msg: "There's already an account with that email address" });
   }
 
   const hashedPassword = await User.hashPassword(password);
@@ -65,7 +65,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(409).json({ msj: "Some login information is missing" });
+    return res.status(409).json({ msg: "Some login information is missing" });
   }
   try {
     const user = await User.findOne({ email });
@@ -109,7 +109,7 @@ const login = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   const cookies = req.cookies;
-  if (!cookies?.jwt) return res.status(401).json({ msj: "Unauthorized" });
+  if (!cookies?.jwt) return res.status(401).json({ msg: "Unauthorized" });
 
   jwt.verify(
     cookies.jwt,
@@ -134,7 +134,7 @@ const refreshToken = async (req, res) => {
 const logout = (req, res) => {
   if (!req.cookies.jwt) return res.sendStatus(204);
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
-  res.json({ msj: "Cookie cleared" });
+  res.json({ msg: "Cookie cleared" });
 };
 
 // function generateToken(id) {

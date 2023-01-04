@@ -10,12 +10,12 @@ const post = async (req, res) => {
   const author = decoded.id;
   try {
     if (!content) {
-      return res.status(418).json({ msj: "There was no content to post" });
+      return res.status(418).json({ msg: "There was no content to post" });
     }
     if (!author) {
       return res
         .status(401)
-        .json({ msj: "You need to be logged in to post a Tweet" });
+        .json({ msg: "You need to be logged in to post a Tweet" });
     }
     const tweet = await Tweet.create({
       content,
@@ -35,11 +35,13 @@ const post = async (req, res) => {
 };
 
 const showAll = async (req, res) => {
-  const page = req.query.page;
+  console.log("req.params: ", req.params);
+  const page = req.params.page;
+  console.log("page: ", page);
   const allTweets = [];
   const tweetsToShow = [];
   try {
-    const user = await User.findById(req.headers.userid).populate({
+    const user = await User.findById(req.userId).populate({
       path: "following",
       populate: {
         path: "tweets",
@@ -71,7 +73,7 @@ const showAll = async (req, res) => {
         tweetsToShow.push(sortedTweets[i]);
       }
     }
-
+    console.log(tweetsToShow);
     res.status(200).json({ tweetsToShow, allTweetsLength: allTweets.length });
   } catch (err) {
     res.status(400).json(err);
@@ -120,11 +122,11 @@ const destroy = async (req, res) => {
     if (tweet.deletedCount === 0) {
       res
         .status(404)
-        .json({ msj: "The Tweet you intended to delete was not found" });
+        .json({ msg: "The Tweet you intended to delete was not found" });
     } else {
       res
         .status(200)
-        .json({ msj: `The Tweet with id: ${id} has been deleted` });
+        .json({ msg: `The Tweet with id: ${id} has been deleted` });
     }
   } catch (err) {
     res.status(400).json(err);

@@ -8,11 +8,11 @@ const post = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ msj: "User not found" });
+      return res.status(404).json({ msg: "User not found" });
     }
     const tweet = await Tweet.findById(tweetId);
     if (!tweet) {
-      return res.status(404).json({ msj: "Tweet not found" });
+      return res.status(404).json({ msg: "Tweet not found" });
     }
     const comment = await Comment.create({
       author: userId,
@@ -24,7 +24,7 @@ const post = async (req, res) => {
     tweet.comments.push(comment._id);
     user.save();
     tweet.save();
-    res.status(201).json({ msj: "Comment created", comment });
+    res.status(201).json({ msg: "Comment created", comment });
   } catch (err) {
     res.status(400).json(err);
   }
@@ -65,7 +65,7 @@ const destroy = async (req, res) => {
   try {
     const comment = await Comment.findById(id);
     if (!comment) {
-      return res.status(404).json({ msj: "The comment was not found" });
+      return res.status(404).json({ msg: "The comment was not found" });
     }
     const author = await User.findById(comment.author).populate("comments");
 
@@ -77,7 +77,7 @@ const destroy = async (req, res) => {
     await Comment.findByIdAndDelete(id);
     await res
       .status(200)
-      .json({ msj: "The specified comment has been deleted" });
+      .json({ msg: "The specified comment has been deleted" });
   } catch (err) {
     res.status(400).json(err);
   }
