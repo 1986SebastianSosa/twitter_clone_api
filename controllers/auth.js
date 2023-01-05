@@ -113,13 +113,10 @@ const refreshToken = async (req, res) => {
     process.env.JWT_REFRESH_SECRET,
     async (err, decoded) => {
       const id = decoded.id;
-      console.log("id: ", id);
       const user = await User.findById(id);
-      console.log("user.id: ", user.id);
       if (!user) return res.sendStatus(403);
       if (err || user.id !== id) return res.sendStatus(403);
 
-      console.log("preparing access Token");
       const accessToken = jwt.sign(
         { username: decoded.username },
         process.env.JWT_ACCESS_SECRET,

@@ -35,9 +35,10 @@ const post = async (req, res) => {
 };
 
 const showAll = async (req, res) => {
-  const page = req.params.page;
+  const page = req.query.page;
   const allTweets = [];
   const tweetsToShow = [];
+  // console.log(`showAll page: ${page}`);
   try {
     const user = await User.findById(req.userId).populate({
       path: "following",
@@ -71,8 +72,18 @@ const showAll = async (req, res) => {
         tweetsToShow.push(sortedTweets[i]);
       }
     }
-    console.log(tweetsToShow);
-    res.status(200).json({ tweetsToShow, allTweetsLength: allTweets.length });
+    let hasMore;
+
+    if (
+      allTweets[allTweets.length - 1].id ===
+      tweetsToShow[tweetsToShow.length - 1].id
+    ) {
+      hasMore = false;
+    } else {
+      hasMore = true;
+    }
+    console.log(hasMore);
+    res.status(200).json({ tweetsToShow, hasMore });
   } catch (err) {
     res.status(400).json(err);
   }
