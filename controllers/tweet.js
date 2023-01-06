@@ -4,12 +4,12 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config;
 
 const post = async (req, res) => {
-  const { content, createdOn } = req.body;
-  const token = req.headers.authorization;
-  const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
-  const author = decoded.id;
+  console.log("post");
+  const { tweetContent, createdOn } = req.body;
+  const author = req.userId;
+  // const author = req.query.userId;
   try {
-    if (!content) {
+    if (!tweetContent) {
       return res.status(418).json({ msg: "There was no content to post" });
     }
     if (!author) {
@@ -18,7 +18,7 @@ const post = async (req, res) => {
         .json({ msg: "You need to be logged in to post a Tweet" });
     }
     const tweet = await Tweet.create({
-      content,
+      content: tweetContent,
       author,
       createdOn,
     });
@@ -35,12 +35,14 @@ const post = async (req, res) => {
 };
 
 const showAll = async (req, res) => {
+  console.log("showAll");
   const page = req.query.page;
   const allTweets = [];
   const tweetsToShow = [];
   // console.log(`showAll page: ${page}`);
   try {
     const user = await User.findById(req.userId).populate({
+      // const user = await User.findById(req.query.userId).populate({
       path: "following",
       populate: {
         path: "tweets",
@@ -82,14 +84,17 @@ const showAll = async (req, res) => {
     } else {
       hasMore = true;
     }
-    console.log(hasMore);
+
+    console.log(tweetsToShow.length, hasMore);
     res.status(200).json({ tweetsToShow, hasMore });
   } catch (err) {
+    console.log(err);
     res.status(400).json(err);
   }
 };
 
 const show = async (req, res) => {
+  console.log("showOne");
   const id = req.params.id;
   try {
     const tweet = await Tweet.findById(id)
@@ -123,6 +128,7 @@ const update = async (req, res) => {
 };
 
 const destroy = async (req, res) => {
+  console.log(req.query);
   const id = req.params.id;
   try {
     const tweet = await Tweet.deleteOne({
