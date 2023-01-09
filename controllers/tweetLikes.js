@@ -15,9 +15,12 @@ const getLikes = async (req, res) => {
 };
 
 const postLike = async (req, res) => {
+  console.log("postLike");
+  console.log(req.params);
+  console.log(req.userId);
   try {
     const tweet = await Tweet.findById(req.params.id).populate("likes");
-    const user = await User.findById(req.headers.userid).populate("tweetLikes");
+    const user = await User.findById(req.userId).populate("tweetLikes");
 
     if (!user) {
       res.status(404).json({ msg: "User not found" });
