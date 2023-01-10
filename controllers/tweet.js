@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config;
 
 const post = async (req, res) => {
-  console.log("post");
   const { tweetContent, createdOn } = req.body;
   const author = req.userId;
   // const author = req.query.userId;
@@ -27,7 +26,6 @@ const post = async (req, res) => {
     user.tweets = [...user.tweets, tweet];
 
     user.save();
-    console.log("tweet created");
     res.status(200).json(tweet);
   } catch (err) {
     res.status(400).json(err);
@@ -35,14 +33,11 @@ const post = async (req, res) => {
 };
 
 const showAll = async (req, res) => {
-  console.log("showAll");
   const page = req.query.page;
   const allTweets = [];
   const tweetsToShow = [];
-  // console.log(`showAll page: ${page}`);
   try {
     const user = await User.findById(req.userId).populate({
-      // const user = await User.findById(req.query.userId).populate({
       path: "following",
       populate: {
         path: "tweets",
@@ -94,7 +89,6 @@ const showAll = async (req, res) => {
 };
 
 const show = async (req, res) => {
-  console.log("showOne");
   const id = req.params.id;
   try {
     const tweet = await Tweet.findById(id)

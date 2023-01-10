@@ -3,8 +3,6 @@ const Tweet = require("../models/Tweet");
 const Comment = require("../models/Comment");
 
 const post = async (req, res) => {
-  console.log("postComment");
-  console.log("body: ", req.body);
   const { commentInput } = req.body;
   const userId = req.userId;
   const tweetId = req.params.id;
@@ -64,9 +62,7 @@ const update = async (req, res) => {
 };
 
 const destroy = async (req, res) => {
-  console.log("req.params ", req.params);
   const id = req.params.id;
-  console.log("id", id);
   try {
     const comment = await Comment.findById(id);
     if (!comment) {
