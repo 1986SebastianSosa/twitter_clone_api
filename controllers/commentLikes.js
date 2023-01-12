@@ -17,9 +17,7 @@ const getLikes = async (req, res) => {
 const postLike = async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.id).populate("likes");
-    const user = await User.findById(req.headers.userid).populate(
-      "commentLikes"
-    );
+    const user = await User.findById(req.userId).populate("commentLikes");
 
     if (!user) {
       res.status(404).json({ msg: "User not found" });

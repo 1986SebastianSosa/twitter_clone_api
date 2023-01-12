@@ -98,7 +98,6 @@ const login = async (req, res) => {
       sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
-    console.log(accessToken);
     res.status(200).json({ user, token: accessToken });
   } catch (err) {
     res.status(404).json({ msg: "Credentials are not correct", err });

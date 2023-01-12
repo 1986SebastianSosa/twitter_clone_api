@@ -6,7 +6,6 @@ require("dotenv").config;
 const post = async (req, res) => {
   const { tweetContent, createdOn } = req.body;
   const author = req.userId;
-  // const author = req.query.userId;
   try {
     if (!tweetContent) {
       return res.status(418).json({ msg: "There was no content to post" });
@@ -80,7 +79,6 @@ const showAll = async (req, res) => {
       hasMore = true;
     }
 
-    console.log(tweetsToShow.length, hasMore);
     res.status(200).json({ tweetsToShow, hasMore });
   } catch (err) {
     console.log(err);

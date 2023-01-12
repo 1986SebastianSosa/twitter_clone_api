@@ -16,13 +16,9 @@ const getLikes = async (req, res) => {
 };
 
 const postLike = async (req, res) => {
-  // console.log("postLike");
-  // console.log(req.params);
-  // console.log(req.userId);
   try {
     const tweet = await Tweet.findById(req.params.id).populate("likes");
     const user = await User.findById(req.userId).populate("tweetLikes");
-    console.log(tweet.likes.find((el) => el.id === user.id));
     if (!user) {
       res.status(404).json({ msg: "User not found" });
     } else if (!tweet) {
@@ -39,16 +35,21 @@ const postLike = async (req, res) => {
       res.status(200).json({ tweetLikes: updatedLikes });
     } else {
       tweet.likes.push(user._id);
-      await tweet.save();
       user.tweetLikes.push(tweet._id);
-      await user.save();
+      try {
+        await tweet.save();
+        await user.save();
+      } catch (error) {
+        console.log(error);
+      }
       const updatedLikes = [];
       for (const tweetLike of tweet.likes) {
         updatedLikes.push(tweetLike.id);
       }
       res.status(201).json({ tweetLikes: updatedLikes });
     }
-  } catch (err) {
+  } catch (error) {
+    console.log(error);
     res.status(400).send(err);
   }
 };
