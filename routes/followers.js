@@ -7,9 +7,9 @@ const {
 const verifyJWT = require("../middlewares/verifyJWT");
 const router = express.Router();
 
-// router.use(verifyJWT);
+router.use(verifyJWT);
 
-router.get("/:id", showAll);
+router.get("/", showAll);
 router.post("/follow", followUser);
 router.post("/unfollow", unfollowUser);
 

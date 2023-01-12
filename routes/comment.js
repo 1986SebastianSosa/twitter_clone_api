@@ -5,9 +5,9 @@ const verifyJWT = require("../middlewares/verifyJWT");
 
 router.use(verifyJWT);
 
-router.post("/:id", post);
+router.post("/:tweetId", post);
 
-router.get("/:id", show);
+router.get("/:commentId", show);
 
 router.patch("/:id", update);
 

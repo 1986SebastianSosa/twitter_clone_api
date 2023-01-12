@@ -24,7 +24,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use("/user", userRoutes);
-app.use("/followers", followRoutes);
+app.use("/follower", followRoutes);
 app.use("/tweet", tweetRoutes);
 app.use("/comment", commentRoutes);
 app.use("/tweetLike", tweetLikeRoutes);

@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const register = async (req, res) => {
+  console.log(req.body);
   const { firstname, lastname, username, password, email } = req.body;
   if (!firstname || !lastname || !username || !password || !email) {
     return res
@@ -39,9 +40,13 @@ const register = async (req, res) => {
         expiresIn: "1d",
       }
     );
-    const refreshToken = jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: "24h",
-    });
+    const refreshToken = jwt.sign(
+      { id: user.id },
+      process.env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
     let response = {
       ...user._doc,
       accessToken,
@@ -54,18 +59,18 @@ const register = async (req, res) => {
         maxAge: 24 * 60 * 60 * 1000,
       })
       .json({ user, token: accessToken });
-  } catch (err) {
-    res.status(500).json(err);
-    throw new Error(err);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
   }
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(409).json({ msg: "Some login information is missing" });
-  }
   try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(409).json({ msg: "Some login information is missing" });
+    }
     const user = await User.findOne({ email });
 
     if (!user) {

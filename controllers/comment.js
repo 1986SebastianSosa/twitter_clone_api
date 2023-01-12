@@ -3,9 +3,11 @@ const Tweet = require("../models/Tweet");
 const Comment = require("../models/Comment");
 
 const post = async (req, res) => {
+  console.log("post");
+  console.log(req.params);
   const { commentInput } = req.body;
   const userId = req.userId;
-  const tweetId = req.params.id;
+  const tweetId = req.params.tweetId;
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -25,16 +27,16 @@ const post = async (req, res) => {
     tweet.comments.push(comment._id);
     user.save();
     tweet.save();
-    res.status(201).json({ msg: "Comment created", comment });
+    res.status(201).json(comment);
   } catch (err) {
     res.status(400).json(err);
   }
 };
 
 const show = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.commentId;
   try {
-    const comment = await Comment.findById(id);
+    const comment = await Comment.findById(id).populate("author");
     res.status(200).json(comment);
   } catch (err) {
     res.status(400).json(err);

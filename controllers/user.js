@@ -3,7 +3,7 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 const show = async (req, res) => {
-  const id = req.params.id;
+  const id = req.userId;
   try {
     const user = await User.findById(id);
     res.status(200).json(user);
