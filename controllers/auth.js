@@ -3,8 +3,9 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const register = async (req, res) => {
-  console.log(req.body);
   const { firstname, lastname, username, password, email } = req.body;
+  console.log(req.body);
+
   if (!firstname || !lastname || !username || !password || !email) {
     return res
       .status(400)
@@ -47,10 +48,6 @@ const register = async (req, res) => {
         expiresIn: "1d",
       }
     );
-    let response = {
-      ...user._doc,
-      accessToken,
-    };
 
     res
       .status(201)
@@ -61,13 +58,16 @@ const register = async (req, res) => {
       .json({ user, token: accessToken });
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res
+      .status(500)
+      .json({ msg: "Something went wrong. Please try again", error });
   }
 };
 
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res.status(409).json({ msg: "Some login information is missing" });
     }
@@ -104,9 +104,11 @@ const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.status(200).json({ user, token: accessToken });
-  } catch (err) {
-    res.status(404).json({ msg: "Credentials are not correct", err });
-    throw new Error(err);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ msg: "Something went wrong. Please try again", error });
   }
 };
 
@@ -133,6 +135,7 @@ const refreshToken = async (req, res) => {
 };
 
 const logout = (req, res) => {
+  console.log("logout");
   if (!req.cookies.jwt) return res.sendStatus(204);
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   res.json({ msg: "Cookie cleared" });
