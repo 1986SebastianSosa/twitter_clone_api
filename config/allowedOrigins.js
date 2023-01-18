@@ -1,6 +1,6 @@
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://twitter-clone-api-three.vercel.app/",
+  "twitter-clone-front.vercel.app",
 ];
 
 module.exports = allowedOrigins;
