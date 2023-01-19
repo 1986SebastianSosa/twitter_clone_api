@@ -3,8 +3,6 @@ const Tweet = require("../models/Tweet");
 const Comment = require("../models/Comment");
 
 const post = async (req, res) => {
-  console.log("post");
-  console.log(req.params);
   const { commentInput } = req.body;
   const userId = req.userId;
   const tweetId = req.params.tweetId;

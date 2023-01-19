@@ -4,7 +4,6 @@ require("dotenv").config();
 
 const register = async (req, res) => {
   const { firstname, lastname, username, password, email } = req.body;
-  console.log(req.body);
 
   if (!firstname || !lastname || !username || !password || !email) {
     return res
@@ -135,7 +134,7 @@ const refreshToken = async (req, res) => {
 };
 
 const logout = (req, res) => {
-  console.log("logout");
+  ("logout");
   if (!req.cookies.jwt) return res.sendStatus(204);
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   res.json({ msg: "Cookie cleared" });

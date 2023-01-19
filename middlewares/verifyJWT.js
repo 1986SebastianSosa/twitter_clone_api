@@ -12,7 +12,6 @@ const verifyJWT = (req, res, next) => {
   jwt.verify(token, process.env.JWT_ACCESS_SECRET, async (err, decoded) => {
     if (err) return res.status(403).json({ msg: "Forbidden" });
     req.userId = decoded.id;
-    console.log("token verified");
     next();
   });
 };
