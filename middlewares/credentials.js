@@ -6,6 +6,7 @@ const credentials = (req, res, next) => {
   if (allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
     res.header("Access-Control-Allow-Credentials", "true");
+    res.Header("Content-Type", "application/json");
   }
   next();
 };
