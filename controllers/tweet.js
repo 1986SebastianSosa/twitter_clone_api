@@ -71,8 +71,8 @@ const showAll = async (req, res) => {
     let hasMore;
 
     if (
-      allTweets[allTweets.length - 1].id ===
-      tweetsToShow[tweetsToShow.length - 1].id
+      allTweets[allTweets.length - 1]?.id ===
+      tweetsToShow[tweetsToShow.length - 1]?.id
     ) {
       hasMore = false;
     } else {

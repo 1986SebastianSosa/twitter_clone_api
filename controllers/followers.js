@@ -21,6 +21,8 @@ const followUser = async (req, res) => {
   const userToFollow = await User.findById(req.body.userToFollowId);
 
   try {
+    console.log(loggedUser);
+    console.log("User To Follow", userToFollow);
     loggedUser.following.push(userToFollow._id);
     userToFollow.followers.push(loggedUser._id);
     await loggedUser.save();
@@ -29,6 +31,7 @@ const followUser = async (req, res) => {
       .status(200)
       .json({ msg: `You are now following @${userToFollow.username}` });
   } catch (err) {
+    console.error(err);
     res.status(400).json({ msg: "Something went wrong. Please try again" });
   }
 };
